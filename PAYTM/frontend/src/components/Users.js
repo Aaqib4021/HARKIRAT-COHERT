@@ -42,7 +42,9 @@ function User({ user }) {
     <div className="flex justify-between mt-4">
       <div className="flex gap-2">
         <div className="w-12 h-12 bg-slate-300 rounded-full flex justify-center">
-          <div className="h-full flex flex-col justify-center text-xl">H</div>
+          <div className="h-full flex flex-col justify-center text-xl">
+            {user.firstname[0].toUpperCase()}
+          </div>
         </div>
         <div className="flex flex-col justify-center">
           {user.firstname} {user.lastname}

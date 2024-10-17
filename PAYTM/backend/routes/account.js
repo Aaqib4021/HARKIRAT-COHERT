@@ -15,18 +15,18 @@ router.get("/balance", authMiddleware, async (req, res) => {
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
-  const session = await mongoose.startSession();
+  //   const session = await mongoose.startSession();
 
-  session.startTransaction();
+  //   session.startTransaction();
   const { to, amount } = req.body;
   const userId = req.userId;
 
   const account = await Account.findOne({
     userId,
-  }).session(session);
+  });
 
   if (account.balance < amount) {
-    await session.abortTransaction();
+    // await session.abortTransaction();
     return res.status(400).json({
       msg: "Insufficient funds ",
     });
@@ -34,10 +34,10 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   const toAccount = await Account.findOne({
     userId: to,
-  }).session(session);
+  });
 
   if (!toAccount) {
-    await session.abortTransaction();
+    // await session.abortTransaction();
     return res.status(400).json({
       msg: "invalid accouht",
     });
@@ -47,16 +47,16 @@ router.post("/transfer", authMiddleware, async (req, res) => {
       userId,
     },
     { $inc: { balance: -amount } }
-  ).session(session);
+  );
 
   await Account.updateOne(
     {
       userId: to,
     },
     { $inc: { balance: amount } }
-  ).session(session);
+  );
 
-  await session.commitTransaction();
+  //   await session.commitTransaction();
 
   res.json({
     msg: "transfer successfull",

@@ -1,16 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
 import InputBox from "../components/InputBox";
 import Button from "../components/Button";
 import BottomWarning from "../components/BottomWarning";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/me", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        const data = response.data;
+        if (data.userId) {
+          setLoading(false);
+          navigate("/dashboard");
+        } else {
+          navigate("/signup");
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        navigate("/signup");
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-slate-300 h-screen flex justify-center">
@@ -59,6 +88,7 @@ const Signup = () => {
                   }
                 );
                 localStorage.setItem("token", response.data.token);
+                navigate("/dashboard");
               }}
               label={"Sign Up"}
             />
