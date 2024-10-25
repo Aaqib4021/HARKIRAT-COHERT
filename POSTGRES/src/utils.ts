@@ -6,3 +6,4 @@ export async function getClient(){
     await client.connect()
     return client;
 }
+//postgresql://postgres:mysecretpassword@localhost:5432/postgres?sslmode=disable
